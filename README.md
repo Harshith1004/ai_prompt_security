@@ -1,85 +1,95 @@
 # AI Prompt Security Detection System
 
-Machine learning system to detect prompt injection and jailbreak attacks in large language models.
+A machine learning system to detect **Prompt Injection** and **Jailbreak** attacks in Large Language Models (LLMs).
 
 ## 🎯 Project Goal
 
-Build a classifier that labels user prompts as:
-- `0` = benign
-- `1` = prompt_injection  
-- `2` = jailbreak
+Build a preamble security classifier that acts as a guardrail before an LLM.
+- **Input**: User prompt
+- **Output**: `ALLOW` (Benign) or `BLOCK` (Malicious)
 
-## 📁 Project Structure
+**Labels:**
+- `0` = Benign
+- `1` = Prompt Injection
+- `2` = Jailbreak
+
+## 🚀 How to Run (Fresh Install)
+
+Since dataset files and models are large, they are not stored in the repository. You must regenerate them using the provided scripts.
+
+### 1. Setup Environment
+```bash
+# Clone the repository
+git clone https://github.com/Harshith1004/ai_prompt_security.git
+cd ai_prompt_security
+
+# Run setup script (Mac/Linux)
+chmod +x setup.sh
+./setup.sh
+source venv/bin/activate
+```
+
+### 2. Build Pipeline (Regenerate Data & Models)
+Run these commands in order to create the models from scratch:
+
+```bash
+# 1. Download Datasets (Alpaca, TruthfulQA, Jailbreaks)
+python src/download_datasets.py
+
+# 2. Clean and Label Data
+python src/data_cleaning.py
+
+# 3. Extract Features (Lexical + S-BERT Embeddings)
+# ⚠️ This takes ~2-5 minutes
+python src/feature_extraction.py
+
+# 4. Train Models (Logistic Regression, Random Forest, MLP)
+python src/train_models.py
+```
+
+### 3. Run the Guardrail Demo
+Once models are trained, you can use the interactive scanner:
+
+```bash
+python src/guardrail.py
+```
+
+## 📂 Project Structure
 
 ```
 ai_prompt_security/
-├── data/
-│   ├── raw/          # Original downloaded datasets
-│   └── processed/    # Cleaned and labeled data
-├── notebooks/        # Jupyter notebooks for experimentation
-├── src/             # Source code
-├── models/          # Trained models
-├── results/         # Evaluation results and reports
+├── data/             # (Generated locally)
+├── models/           # (Generated locally)
+├── notebooks/        # Experiments
+├── results/          # Evaluation metrics & plots
+├── src/              # Source code
+│   ├── download_datasets.py   # Step 1
+│   ├── data_cleaning.py       # Step 2
+│   ├── feature_extraction.py  # Step 3
+│   ├── train_models.py        # Step 4
+│   ├── evaluate_models.py     # Step 5
+│   └── guardrail.py           # Demo App
 └── requirements.txt
 ```
 
-## 🚀 Getting Started
+## 📊 Performance
 
-### 1. Setup Environment
+| Model | Accuracy | ROC-AUC |
+|-------|----------|---------|
+| **DistilBERT Head (MLP)** | **97.9%** | **0.99** |
+| Logistic Regression | 96.2% | 0.98 |
+| Random Forest | 96.0% | 0.98 |
 
-```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Mac/Linux
-# venv\Scripts\activate   # On Windows
+## 📁 Source Datasets
 
-# Install dependencies
-pip install -r requirements.txt
-```
+**Malicious:**
+- `deepset/prompt-injections`
+- `Anthropic/hh-rlhf` (Red Team)
+- `rubend18/ChatGPT-Jailbreak-Prompts`
 
-### 2. Download Datasets (Phase 1)
-
-```bash
-python src/download_datasets.py
-```
-
-This will download:
-- **Malicious prompts**: Prompt injections, jailbreaks, red team attacks
-- **Benign prompts**: ShareGPT, LMSYS chat data
-
-### 3. Clean & Process Data
-
-```bash
-python src/data_cleaning.py
-```
-
-### 4. Train Models (Coming in Phase 3)
-
-```bash
-python src/train_model.py
-```
-
-## 📊 Dataset Sources
-
-### Malicious Prompts
-- deepset/prompt-injections
-- Anthropic/hh-rlhf (red team)
-- rubend18/ChatGPT-Jailbreak-Prompts
-
-### Benign Prompts
-- anon8231489123/ShareGPT_Vicuna_unfiltered
-- lmsys/lmsys-chat-1m
-
-## 🔬 Project Phases
-
-- [x] **Phase 1**: Data Collection & Cleaning
-- [ ] **Phase 2**: Feature Engineering
-- [ ] **Phase 3**: Model Training
-- [ ] **Phase 4**: Evaluation
-- [ ] **Phase 5**: Error Analysis
-- [ ] **Phase 6**: Guardrail Demo
-- [ ] **Phase 7**: Dissertation
+**Benign:**
+- `tatsu-lab/alpaca`
+- `truthful_qa`
 
 ## 📝 License
-
 Research project for educational purposes.
