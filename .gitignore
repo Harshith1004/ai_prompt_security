@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data files (Exclude ALL large data files)
+data/raw/
+data/processed/*.npz
+data/processed/*.csv
+data/processed/*.npy
+
+# Models (Exclude large models)
+models/*.joblib
+models/*.pkl
+models/*.pt
+models/*.pth
+models/*.h5
+models/*.bin
+models/*.safetensors
+
+# Results
+results/plots/
+results/logs/
+*.log
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
